@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "gen:og": "node scripts/gen-og-image.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.400.0",
