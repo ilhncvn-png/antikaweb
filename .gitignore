@@ -1,0 +1,29 @@
+# ── Dependencies ──────────────────────────────
+node_modules/
+
+# ── Next.js build output ──────────────────────
+.next/
+out/
+
+# ── Environment — NEVER commit secrets ────────
+.env
+.env.local
+.env.*.local
+
+# ── TypeScript cache ──────────────────────────
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# ── OS / Editor ───────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/settings.json
+
+# ── Playwright ────────────────────────────────
+/playwright-report/
+/test-results/
+
+# ── Logs ──────────────────────────────────────
+*.log
+npm-debug.log*
