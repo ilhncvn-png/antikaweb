@@ -10,7 +10,11 @@ const config = {
   basePath: process.env.BASE_PATH ?? '',
 
   images: isStatic
-    ? { unoptimized: true }
+    ? {
+        // Custom loader prepends NEXT_PUBLIC_BASE_PATH to every image src.
+        // unoptimized:true alone does NOT prepend basePath — the loader does.
+        loaderFile: './src/lib/image-loader.ts',
+      }
     : { formats: ['image/avif', 'image/webp'], remotePatterns: [] },
 
   // GitHub Pages cannot serve custom response headers, so the function is omitted entirely
