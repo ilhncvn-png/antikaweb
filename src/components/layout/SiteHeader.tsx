@@ -5,6 +5,8 @@ import { Phone } from 'lucide-react'
 import { BRAND } from '@/lib/constants'
 import { trackPhoneClick, trackWhatsAppClick } from '@/lib/analytics'
 
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
+
 const NAV_LINKS = [
   { label: 'Nasıl Çalışır', href: '#nasil-calisir' },
   { label: 'Aldığımız Ürünler', href: '#kategoriler' },
@@ -35,7 +37,7 @@ export default function SiteHeader() {
     <header className={cls}>
       <div className="header-inner">
 
-        <a href="/" className="brand-wordmark" aria-label="Değerli Eşya Merkezi — Ana Sayfa">
+        <a href={`${BASE}/`} className="brand-wordmark" aria-label="Değerli Eşya Merkezi — Ana Sayfa">
           <span className="brand-wordmark-l1">Değerli Eşya</span>
           <span className="brand-wordmark-l2">Merkezi</span>
         </a>

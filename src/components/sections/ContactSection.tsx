@@ -23,6 +23,9 @@ function validatePhone(p: string) {
   return /^(\+90|0)?[0-9]{10}$/.test(p.replace(/[\s\-()]/g, ''))
 }
 
+// On GitHub Pages there is no API route — submit opens a pre-filled WhatsApp message instead.
+const IS_STATIC = process.env.NEXT_PUBLIC_DEPLOY_TARGET === 'static'
+
 export default function ContactSection() {
   const [form, setForm] = useState<FormData>({ name: '', phone: '', category: '', description: '', photos: null })
   const [errors, setErrors] = useState<FormErrors>({})
@@ -63,6 +66,26 @@ export default function ContactSection() {
     if (Object.keys(errs).length > 0) { setErrors(errs); return }
 
     setLoading(true)
+
+    if (IS_STATIC) {
+      // No API route on GitHub Pages — open WhatsApp with pre-filled message.
+      // User attaches photos directly in WhatsApp after the message is sent.
+      const parts = [
+        `Ad Soyad: ${form.name}`,
+        `Telefon: ${form.phone}`,
+        `Kategori: ${form.category}`,
+        form.description.trim() ? `Açıklama: ${form.description.trim()}` : null,
+        photoNames.length > 0 ? `(${photoNames.length} fotoğraf ekleyeceğim)` : null,
+      ].filter(Boolean).join('\n')
+      const msg = `Merhaba, değerleme talebim var:\n\n${parts}`
+      const waUrl = `https://wa.me/${BRAND.whatsappNumber}?text=${encodeURIComponent(msg)}`
+      window.open(waUrl, '_blank', 'noopener,noreferrer')
+      setSuccess(true)
+      trackFormSubmit()
+      setLoading(false)
+      return
+    }
+
     try {
       const fd = new FormData()
       fd.append('name', form.name)
@@ -102,9 +125,16 @@ export default function ContactSection() {
                 <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', fontWeight: 300, margin: '1rem 0 .5rem' }}>
                   Teşekkürler!
                 </h3>
-                <p>
-                  Değerli Eşya Merkezi ekibi <strong>2 saat içinde</strong> sizi arayacak.
-                </p>
+                {IS_STATIC ? (
+                  <p>
+                    WhatsApp açıldı. Hazırlanan mesajı gönderin ve{' '}
+                    <strong>fotoğraflarınızı WhatsApp&apos;tan ekleyin.</strong>
+                  </p>
+                ) : (
+                  <p>
+                    Değerli Eşya Merkezi ekibi <strong>2 saat içinde</strong> sizi arayacak.
+                  </p>
+                )}
               </div>
             ) : (
               <form onSubmit={handleSubmit} noValidate aria-label="Değerleme formu">

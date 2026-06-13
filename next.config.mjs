@@ -1,30 +1,38 @@
 /** @type {import('next').NextConfig} */
+const isStatic = process.env.DEPLOY_TARGET === 'static'
+
 const config = {
-  // Deploying to Vercel / Node.js — API routes active.
-  // To switch to static export (GitHub Pages, Netlify static):
-  //   output: 'export', images: { unoptimized: true }
-  // Note: API routes are not supported with output: 'export'
-  images: {
-    formats: ['image/avif', 'image/webp'],
-    remotePatterns: [],
-  },
-  // Security headers
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'X-Frame-Options', value: 'DENY' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
-        ],
-      },
-    ]
-  },
+  // Static export for GitHub Pages; omit for Vercel/Node.js (API routes require server mode)
+  ...(isStatic && { output: 'export' }),
+
+  // GitHub Pages serves under /<repo-name>/ — set BASE_PATH env var in the workflow.
+  // Empty string (default) is correct for Vercel and custom-domain GitHub Pages.
+  basePath: process.env.BASE_PATH ?? '',
+
+  images: isStatic
+    ? { unoptimized: true }
+    : { formats: ['image/avif', 'image/webp'], remotePatterns: [] },
+
+  // GitHub Pages cannot serve custom response headers, so the function is omitted entirely
+  // for static builds to avoid the "headers not applied" build warning.
+  ...(!isStatic && {
+    async headers() {
+      return [
+        {
+          source: '/(.*)',
+          headers: [
+            { key: 'X-Content-Type-Options', value: 'nosniff' },
+            { key: 'X-Frame-Options', value: 'DENY' },
+            { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+            {
+              key: 'Permissions-Policy',
+              value: 'camera=(), microphone=(), geolocation=()',
+            },
+          ],
+        },
+      ]
+    },
+  }),
 }
 
 export default config

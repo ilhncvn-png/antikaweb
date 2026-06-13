@@ -86,15 +86,17 @@ export const metadata: Metadata = {
 }
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID
+// Injected at build time so favicon/manifest hrefs work under a basePath (e.g. GitHub Pages)
+const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="tr" className={`${serif.variable} ${sans.variable}`}>
       <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="icon" type="image/png" sizes="32x32" href={`${BASE}/favicon-32x32.png`} />
+        <link rel="icon" type="image/png" sizes="16x16" href={`${BASE}/favicon-16x16.png`} />
+        <link rel="apple-touch-icon" sizes="180x180" href={`${BASE}/apple-touch-icon.png`} />
+        <link rel="manifest" href={`${BASE}/site.webmanifest`} />
 
         {/* CSS font variable override */}
         <style suppressHydrationWarning>{`
