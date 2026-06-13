@@ -75,14 +75,13 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // Log submission (replace with real email sending)
-  console.log('[Contact Form]', {
+  // Temporary log until email sending is configured — visible in Vercel logs
+  console.log('[Contact Form] New lead', {
     name,
-    phone,
+    phone: phone.slice(0, -4) + '****',
     category,
-    description: description ? description.slice(0, 80) : '',
+    hasDescription: description.length > 0,
     photoCount: validPhotos.length,
-    ip,
     ts: new Date().toISOString(),
   })
 
